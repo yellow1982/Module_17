@@ -13,7 +13,7 @@ router = APIRouter(prefix='/user', tags=['user'])
 @router.get('/')
 async def all_users(db: Annotated[Session, Depends(get_db)]):
     users = db.scalars(select(User)).all()
-    if users is None:
+    if users == []:
         raise HTTPException(
             status_code=404,
             detail="Users was not found"
@@ -23,7 +23,7 @@ async def all_users(db: Annotated[Session, Depends(get_db)]):
 
 @router.get('/user_id')
 async def user_by_id(db: Annotated[Session, Depends(get_db)], user_id: int):
-    user = db.scalars(select(User).where(User.id == user_id))
+    user = db.scalar(select(User).where(User.id == user_id))
     if user is None:
         raise HTTPException(
             status_code=404,
